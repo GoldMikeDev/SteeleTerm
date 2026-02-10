@@ -1,5 +1,6 @@
 using Renci.SshNet;
 using System.Net;
+using SteeleTerm.FileBrowser;
 namespace SteeleTerm.SSH
 {
     partial class SteeleTermSSH
@@ -112,7 +113,7 @@ namespace SteeleTerm.SSH
                     keyEntryMethod = "BFD"; //Browse File Directory
                     Console.WriteLine();
                 BrowseFileDirectory:
-                    keyPath = SteeleTerm.SteeleTermFileBrowser(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ssh"), false);
+                    keyPath = SteeleTermFileBrowser.FileBrowser(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".ssh"), false);
                     if (keyPath == null) goto BrowseFileDirectory;
                     if (keyPath == "exit") goto EnterKeyPath;
                     if (keyPath == "Exit") return 0;

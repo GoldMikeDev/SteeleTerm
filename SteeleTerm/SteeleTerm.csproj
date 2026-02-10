@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<AssemblyName>SteeleTerm</AssemblyName>
@@ -13,10 +13,30 @@
 		<PackAsTool>true</PackAsTool>
 		<PackageId>SteeleTerm</PackageId>
 		<PackageOutputPath>./bin/Release/nupkg</PackageOutputPath>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net10.0-windows</TargetFramework>
 		<ToolCommandName>SteeleTerm</ToolCommandName>
 		<Version>0.5.20</Version>
 	</PropertyGroup>
+	<ItemGroup>
+	  <COMReference Include="PortableDeviceApiLib">
+	    <WrapperTool>tlbimp</WrapperTool>
+	    <VersionMinor>0</VersionMinor>
+	    <VersionMajor>1</VersionMajor>
+	    <Guid>1f001332-1a57-4934-be31-affc99f4ee0a</Guid>
+	    <Lcid>0</Lcid>
+	    <Isolated>false</Isolated>
+	    <EmbedInteropTypes>false</EmbedInteropTypes>
+	  </COMReference>
+	  <COMReference Include="PortableDeviceTypesLib">
+	    <WrapperTool>tlbimp</WrapperTool>
+	    <VersionMinor>0</VersionMinor>
+	    <VersionMajor>1</VersionMajor>
+	    <Guid>2b00ba2f-e750-4beb-9235-97142ede1d3e</Guid>
+	    <Lcid>0</Lcid>
+	    <Isolated>false</Isolated>
+	    <EmbedInteropTypes>false</EmbedInteropTypes>
+	  </COMReference>
+	</ItemGroup>
 	<ItemGroup>
 		<None Include="Updater\UpdateScript.ps1">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
