@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using SteeleTerm.FileBrowser.Wpd;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -33,9 +34,11 @@ namespace SteeleTerm.FileBrowser
                         scanSpinner.Start(promptFileBrowser, "Scanning drives ");
                     }
                     else Console.WriteLine($"{promptFileBrowser}Scanning drives...");
+                    List<(string deviceID, string deviceName)>? wpd = null;
+                    var wpdThread = new Thread(() => { wpd = WpdDevices.GetDevices(); }) { IsBackground = true };
+                    wpdThread.Start();
                     var drives = DriveInfo.GetDrives();
                     var uncCache = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
-                    var wpd = WPD.GetDevices();
                     for (int d = 0; d < drives.Length; d++)
                     {
                         var di = drives[d];
@@ -62,6 +65,14 @@ namespace SteeleTerm.FileBrowser
                         }
                         if (!string.IsNullOrEmpty(unc)) disp2 += $" {unc}";
                         items.Add((true, disp2, root));
+                    }
+                    if (wpdThread.Join(500) && wpd != null)
+                    {
+                        foreach (var (deviceID, deviceName) in wpd)
+                        {
+                            string disp = $"(WPD) {deviceName}";
+                            items.Add((true, disp, "wpd:" + deviceID));
+                        }
                     }
                     if (scanSpinner != null) StopSpinnerIfArmed(ref waitingScan, scanSpinner);
                     if (!redirected)
@@ -103,7 +114,7 @@ namespace SteeleTerm.FileBrowser
                 var display = new List<string>(count);
                 for (int k = 0; k < count; k++)
                 {
-                    string icon = inThisPc ? "💽" : (items[k].IsDir ? "📁" : GetFileIcon(items[k].Name));
+                    string icon = inThisPc ? (items[k].FullPath.StartsWith("wpd:", StringComparison.Ordinal) ? "📱" : "💽") : (items[k].IsDir ? "📁" : GetFileIcon(items[k].Name));
                     string s = $"{k + 1:0000}{icon} {items[k].Name}";
                     display.Add(s);
                 }
@@ -266,9 +277,9 @@ namespace SteeleTerm.FileBrowser
             internal static partial int StrCmpLogicalW(string psz1, string psz2);
             public static int CompareNatural(string a, string b) { return StrCmpLogicalW(a, b); }
         }
-        static readonly HashSet<string> compressedArchiveExts = new(StringComparer.Ordinal) { "7z", "apk", "arc", "arj", "bz2", "cab", "cpio", "gz", "iso", "jar", "lha", "lzh", "lz", "lzma", "lzo", "rar", "tar", "tbz2", "tgz", "txz", "xz", "zip", "zipx" };
-        static readonly HashSet<string> executableExts = new(StringComparer.Ordinal) { "appx", "appxbundle", "com", "exe", "msi", "msix", "msixbundle", "msp" };
-        static readonly HashSet<string> imageExts = new(StringComparer.Ordinal) { "avif", "bmp", "gif", "heic", "heif", "ico", "jpeg", "jpg", "png", "svg", "tif", "tiff", "webp" };
+        static readonly HashSet<string> compressedArchiveExts = [with(StringComparer.Ordinal), "7z", "apk", "arc", "arj", "bz2", "cab", "cpio", "gz", "iso", "jar", "lha", "lzh", "lz", "lzma", "lzo", "rar", "tar", "tbz2", "tgz", "txz", "xz", "zip", "zipx"];
+        static readonly HashSet<string> executableExts = [with(StringComparer.Ordinal), "appx", "appxbundle", "com", "exe", "msi", "msix", "msixbundle", "msp"];
+        static readonly HashSet<string> imageExts = [with(StringComparer.Ordinal), "avif", "bmp", "gif", "heic", "heif", "ico", "jpeg", "jpg", "png", "svg", "tif", "tiff", "webp"];
         static string GetFileIcon(string fileName)
         {
             var ext = Path.GetExtension(fileName);
