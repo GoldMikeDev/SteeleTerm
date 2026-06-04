@@ -6,24 +6,20 @@
 		<Description>Multipurpose terminal client.</Description>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<IsPackable>true</IsPackable>
-		<LangVersion>preview</LangVersion>
+		<LangVersion>14</LangVersion>
 		<NoWarn>$(NoWarn);NU5111</NoWarn>
 		<Nullable>enable</Nullable>
 		<OutputType>Exe</OutputType>
 		<PackAsTool>true</PackAsTool>
 		<PackageId>SteeleTerm</PackageId>
 		<PackageOutputPath>./bin/Release/nupkg</PackageOutputPath>
-		<TargetFramework>net10.0-windows</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ToolCommandName>SteeleTerm</ToolCommandName>
-		<Version>0.5.20</Version>
+		<Version>0.6.0</Version>
 	</PropertyGroup>
 	<ItemGroup>
-		<None Include="Updater\UpdateScript.ps1">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</None>
 		<PackageReference Include="SSH.NET" Version="2025.1.0" />
-		<PackageReference Include="System.IO.Ports" Version="10.*" />
-		<PackageReference Include="System.Management" Version="10.*" />
+		<PackageReference Include="System.IO.Ports" Version="11.0.0-preview.4.26230.115" />
+		<PackageReference Include="System.Management" Version="11.0.0-preview.4.26230.115" />
 	</ItemGroup>
 </Project>
