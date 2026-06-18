@@ -1,7 +1,4 @@
-﻿using Org.BouncyCastle.Bcpg;
-using Renci.SshNet.Security;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security;
@@ -198,8 +195,7 @@ namespace SteeleTerm.AddonModules.Updater
 			catch (Exception ex) { Console.WriteLine($"⚠️ Cleanup encountered an issue: {ex.Message}"); }
 			Console.WriteLine("✅ Cleanup complete.");
 		}
-		[GeneratedRegex("<Version>(.*?)</Version>", RegexOptions.Compiled | RegexOptions.CultureInvariant)]
-		private static partial Regex VersionRegex();
+		[GeneratedRegex("<Version>(.*?)</Version>", RegexOptions.Compiled | RegexOptions.CultureInvariant)] private static partial Regex VersionRegex();
 		internal static class Cmd
 		{
 			public static (int ExitCode, string Output, string Error) Run(string exe, string args, string? workingDir, bool silent, bool streamToConsole, bool exitOnFail, bool inheritConsole)
