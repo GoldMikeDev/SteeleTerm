@@ -18,8 +18,12 @@
 		<Version>0.6.0</Version>
 	</PropertyGroup>
 	<ItemGroup>
+		<None Include="AddonModules\Updater\UpdateScript.ps1">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</None>
 		<PackageReference Include="SSH.NET" Version="2025.1.0" />
-		<PackageReference Include="System.IO.Ports" Version="11.0.0-preview.4.26230.115" />
-		<PackageReference Include="System.Management" Version="11.0.0-preview.4.26230.115" />
+		<PackageReference Include="System.IO.Ports" Version="11.0.0-preview.5.26302.115" />
+		<PackageReference Include="System.Management" Version="11.0.0-preview.5.26302.115" />
 	</ItemGroup>
 </Project>
