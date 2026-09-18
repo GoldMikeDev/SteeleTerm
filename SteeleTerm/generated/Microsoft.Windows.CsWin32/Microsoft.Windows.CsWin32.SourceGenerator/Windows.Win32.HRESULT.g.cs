@@ -24,7 +24,7 @@ namespace Windows.Win32
 		/// <para><see href="https://learn.microsoft.com/office/client-developer/outlook/mapi/hresult#">Read more on learn.microsoft.com</see>.</para>
 		/// </remarks>
 		[DebuggerDisplay("{DebuggerDisplay,nq}")]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal readonly partial struct HRESULT
 			: IEquatable<HRESULT>
 		{

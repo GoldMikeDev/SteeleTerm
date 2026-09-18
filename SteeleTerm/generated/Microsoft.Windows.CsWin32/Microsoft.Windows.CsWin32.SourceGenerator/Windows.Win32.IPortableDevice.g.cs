@@ -20,7 +20,7 @@ namespace Windows.Win32
 	namespace Devices.PortableDevices
 	{
 		[Guid("625E2DF8-6392-4CF0-9AD1-3CFA5F17775C"),InterfaceType(ComInterfaceType.InterfaceIsIUnknown),ComImport()]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal interface IPortableDevice
 		{
 			/// <summary>The Open method opens a connection between the application and the device.</summary>

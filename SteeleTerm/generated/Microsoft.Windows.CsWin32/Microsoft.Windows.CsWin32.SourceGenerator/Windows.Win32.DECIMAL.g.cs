@@ -21,7 +21,7 @@ namespace Windows.Win32
 	{
 		/// <summary>The DECIMAL structure represents a decimal data type that provides a sign and scale for a number.</summary>
 		/// <remarks></remarks>
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct DECIMAL
 		{
 			/// <summary>Reserved.</summary>
@@ -77,7 +77,7 @@ namespace Windows.Win32
 			internal ref ulong Lo64 => ref this.Anonymous2.Lo64;
 
 			[StructLayout(LayoutKind.Explicit)]
-			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 			internal partial struct _Anonymous1_e__Union
 			{
 				[FieldOffset(0)]
@@ -95,7 +95,7 @@ namespace Windows.Win32
 				[UnscopedRef]
 				internal ref byte sign => ref this.Anonymous.sign;
 
-				[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+				[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 				internal partial struct _Anonymous_e__Struct
 				{
 					/// <summary>The number of decimal places for the number. Valid values are from 0 to 28. So 12.345 is represented as 12345 with a scale of 3.</summary>
@@ -107,7 +107,7 @@ namespace Windows.Win32
 			}
 
 			[StructLayout(LayoutKind.Explicit)]
-			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 			internal partial struct _Anonymous2_e__Union
 			{
 				[FieldOffset(0)]
@@ -125,7 +125,7 @@ namespace Windows.Win32
 				[UnscopedRef]
 				internal ref uint Mid32 => ref this.Anonymous.Mid32;
 
-				[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+				[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 				internal partial struct _Anonymous_e__Struct
 				{
 					/// <summary>The low 32 bits of the number.</summary>

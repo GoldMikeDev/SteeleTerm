@@ -21,7 +21,7 @@ namespace Windows.Win32
 	/// <content>
 	/// Contains extern methods from "OLEAUT32.dll".
 	/// </content>
-	[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+	[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 	internal static partial class PInvoke
 	{
 		/// <summary>Deallocates a string allocated previously by SysAllocString, SysAllocStringByteLen, SysReAllocString, SysAllocStringLen, or SysReAllocStringLen.</summary>

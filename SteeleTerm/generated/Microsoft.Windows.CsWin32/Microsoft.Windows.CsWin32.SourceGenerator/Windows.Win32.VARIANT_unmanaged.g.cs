@@ -19,7 +19,7 @@ namespace Windows.Win32
 {
 	namespace System.Variant
 	{
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct VARIANT_unmanaged
 		{
 			internal _Anonymous_e__Union_unmanaged Anonymous;
@@ -233,7 +233,7 @@ namespace Windows.Win32
 			internal ref winmdroot.Foundation.DECIMAL decVal => ref this.Anonymous.decVal;
 
 			[StructLayout(LayoutKind.Explicit)]
-			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 			internal partial struct _Anonymous_e__Union_unmanaged
 			{
 				[FieldOffset(0)]
@@ -450,7 +450,7 @@ namespace Windows.Win32
 				[UnscopedRef]
 				internal unsafe ref winmdroot.System.Ole.IRecordInfo_unmanaged* pRecInfo => ref this.Anonymous.Anonymous.Anonymous.pRecInfo;
 
-				[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+				[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 				internal partial struct _Anonymous_e__Struct_unmanaged
 				{
 					/// <summary>
@@ -668,7 +668,7 @@ namespace Windows.Win32
 					internal unsafe ref winmdroot.System.Ole.IRecordInfo_unmanaged* pRecInfo => ref this.Anonymous.Anonymous.pRecInfo;
 
 					[StructLayout(LayoutKind.Explicit)]
-					[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+					[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 					internal partial struct _Anonymous_e__Union_unmanaged
 					{
 						/// <summary>
@@ -983,7 +983,7 @@ namespace Windows.Win32
 						[UnscopedRef]
 						internal unsafe ref winmdroot.System.Ole.IRecordInfo_unmanaged* pRecInfo => ref this.Anonymous.pRecInfo;
 
-						[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+						[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 						internal partial struct _Anonymous_e__Struct_unmanaged
 						{
 							/// <summary>

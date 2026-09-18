@@ -20,7 +20,7 @@ namespace Windows.Win32
 	namespace System.Com
 	{
 		[Flags]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal enum IDLFLAGS : ushort
 		{
 			IDLFLAG_NONE = 0x0000,

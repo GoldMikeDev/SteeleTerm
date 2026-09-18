@@ -23,7 +23,7 @@ namespace Windows.Win32
 		/// <remarks>
 		/// <para><see href="https://learn.microsoft.com/windows/win32/api/wtypes/ne-wtypes-statflag">Learn more about this API from learn.microsoft.com</see>.</para>
 		/// </remarks>
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal enum STATFLAG
 		{
 			/// <summary>

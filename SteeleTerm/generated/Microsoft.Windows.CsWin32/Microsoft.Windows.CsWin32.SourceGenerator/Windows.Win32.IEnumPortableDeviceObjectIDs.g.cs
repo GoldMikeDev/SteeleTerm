@@ -20,7 +20,7 @@ namespace Windows.Win32
 	namespace Devices.PortableDevices
 	{
 		[Guid("10ECE955-CF41-4728-BFA0-41EEDF1BBF19"),InterfaceType(ComInterfaceType.InterfaceIsIUnknown),ComImport()]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal interface IEnumPortableDeviceObjectIDs
 		{
 			/// <summary>The Next method retrieves the next one or more object IDs in the enumeration sequence.</summary>

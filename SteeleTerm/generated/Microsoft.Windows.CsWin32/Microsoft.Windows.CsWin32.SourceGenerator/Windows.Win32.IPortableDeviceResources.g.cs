@@ -20,7 +20,7 @@ namespace Windows.Win32
 	namespace Devices.PortableDevices
 	{
 		[Guid("FD8878AC-D841-4D17-891C-E6829CDB6934"),InterfaceType(ComInterfaceType.InterfaceIsIUnknown),ComImport()]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal interface IPortableDeviceResources
 		{
 			/// <summary>The GetSupportedResources method retrieves a list of resources that are supported by a specific object.</summary>

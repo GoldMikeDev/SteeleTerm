@@ -19,7 +19,7 @@ namespace Windows.Win32
 {
 	namespace System.Com
 	{
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct VARDESC_unmanaged
 		{
 			internal int memid;
@@ -43,7 +43,7 @@ namespace Windows.Win32
 			internal unsafe ref winmdroot.System.Variant.VARIANT_unmanaged* lpvarValue => ref this.Anonymous.lpvarValue;
 
 			[StructLayout(LayoutKind.Explicit)]
-			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 			internal partial struct _Anonymous_e__Union_unmanaged
 			{
 				/// <summary>With VAR_PERINSTANCE, the offset of this variable within the instance.</summary>

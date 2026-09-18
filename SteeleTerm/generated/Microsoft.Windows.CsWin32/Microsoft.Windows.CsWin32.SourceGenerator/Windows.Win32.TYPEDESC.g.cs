@@ -21,7 +21,7 @@ namespace Windows.Win32
 	{
 		/// <summary>Describes the type of a variable, the return type of a function, or the type of a function parameter.</summary>
 		/// <remarks>If the variable is VT_SAFEARRAY or VT_PTR, the union portion of the TYPEDESC contains a pointer to a TYPEDESC that specifies the element type.</remarks>
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct TYPEDESC
 		{
 			internal _Anonymous_e__Union Anonymous;
@@ -42,7 +42,7 @@ namespace Windows.Win32
 			internal ref uint hreftype => ref this.Anonymous.hreftype;
 
 			[StructLayout(LayoutKind.Explicit)]
-			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 			internal partial struct _Anonymous_e__Union
 			{
 				/// <summary>With VT_PTR, the type pointed to.</summary>

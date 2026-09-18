@@ -25,7 +25,7 @@ namespace Windows.Win32
 		/// <para>The <b>fFeatures</b> flags describe attributes of an array that can affect how the array is released. The <b>fFeatures</b> field describes what type of data is stored in the <b>SAFEARRAY</b> and how the array is allocated. This allows freeing the array without referencing its containing variant.</para>
 		/// <para><see href="https://learn.microsoft.com/windows/win32/api/oaidl/ns-oaidl-safearray#">Read more on learn.microsoft.com</see>.</para>
 		/// </remarks>
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct SAFEARRAY
 		{
 			/// <summary>The number of dimensions.</summary>

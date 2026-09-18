@@ -17,7 +17,7 @@ using global::System.Runtime.Versioning;
 using winmdroot = global::Windows.Win32;
 namespace Windows.Win32
 {
-	[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+	[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 	internal static partial class System_Com_ISequentialStream_Extensions
 	{
 		/// <inheritdoc cref="winmdroot.System.Com.ISequentialStream.Read(void*, uint, uint*)"/>

@@ -21,7 +21,7 @@ namespace Windows.Win32
 	/// <summary>
 	/// Represents a Win32 handle that can be closed with <see cref="PInvoke.SysFreeString(winmdroot.Foundation.BSTR)"/>.
 	/// </summary>
-	[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+	[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 	internal partial class SysFreeStringSafeHandle
 		:SafeHandle	{
 		private static readonly IntPtr INVALID_HANDLE_VALUE = new IntPtr(0L);

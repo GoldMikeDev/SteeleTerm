@@ -20,7 +20,7 @@ namespace Windows.Win32
 	namespace Devices.PortableDevices
 	{
 		[Guid("6848F6F2-3155-4F86-B6F5-263EEEAB3143"),InterfaceType(ComInterfaceType.InterfaceIsIUnknown),ComImport()]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal interface IPortableDeviceValues
 		{
 			/// <summary>IPortableDeviceValues::GetCount method - The GetCount method retrieves the number of items in the collection.</summary>

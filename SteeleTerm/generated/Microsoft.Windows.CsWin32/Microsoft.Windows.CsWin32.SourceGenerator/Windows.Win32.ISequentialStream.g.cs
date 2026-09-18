@@ -21,7 +21,7 @@ namespace Windows.Win32
 	{
 		[Guid("0C733A30-2A1C-11CE-ADE5-00AA0044773D"),InterfaceType(ComInterfaceType.InterfaceIsIUnknown),ComImport()]
 		[SupportedOSPlatform("windows5.0")]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal interface ISequentialStream
 		{
 			/// <summary>Reads a specified number of bytes from the stream object into memory, starting at the current seek pointer.</summary>

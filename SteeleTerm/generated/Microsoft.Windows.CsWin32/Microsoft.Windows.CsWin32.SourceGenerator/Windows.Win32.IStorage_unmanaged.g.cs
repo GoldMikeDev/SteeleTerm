@@ -21,7 +21,7 @@ namespace Windows.Win32
 	{
 		[Guid("0000000B-0000-0000-C000-000000000046")]
 		[SupportedOSPlatform("windows5.0")]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal unsafe partial struct IStorage_unmanaged
 			:IComIID		{
 			/// <inheritdoc cref="QueryInterface(global::System.Guid*, void**)"/>

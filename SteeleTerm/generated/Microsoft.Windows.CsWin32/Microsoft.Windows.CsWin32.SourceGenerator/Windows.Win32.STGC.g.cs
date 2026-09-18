@@ -25,7 +25,7 @@ namespace Windows.Win32
 		/// <para><see href="https://learn.microsoft.com/windows/win32/api/wtypes/ne-wtypes-stgc#">Read more on learn.microsoft.com</see>.</para>
 		/// </remarks>
 		[Flags]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal enum STGC
 		{
 			/// <summary>You can specify this condition with <b>STGC_CONSOLIDATE</b>, or some combination of the other three flags in this list of elements. Use this value to increase the readability of code.</summary>

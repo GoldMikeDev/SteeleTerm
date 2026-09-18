@@ -22,7 +22,7 @@ namespace Windows.Win32
 		/// <summary>The CY structure is useful for calculations involving money, or for any fixed-point calculation where accuracy is particularly important.</summary>
 		/// <remarks></remarks>
 		[StructLayout(LayoutKind.Explicit)]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct CY
 		{
 			[FieldOffset(0)]
@@ -40,7 +40,7 @@ namespace Windows.Win32
 			[UnscopedRef]
 			internal ref int Hi => ref this.Anonymous.Hi;
 
-			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 			internal partial struct _Anonymous_e__Struct
 			{
 				/// <summary></summary>

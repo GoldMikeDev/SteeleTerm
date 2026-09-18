@@ -19,7 +19,7 @@ namespace Windows.Win32
 {
 	namespace System.Com.StructuredStorage
 	{
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct CABSTR
 		{
 			internal uint cElems;

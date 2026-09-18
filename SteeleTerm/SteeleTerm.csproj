@@ -17,9 +17,11 @@
 		<PackAsTool>true</PackAsTool>
 		<PackageId>SteeleTerm</PackageId>
 		<PackageOutputPath>./bin/Release/nupkg</PackageOutputPath>
+		<PlatformTarget>x64</PlatformTarget>
 		<TargetFramework>net10.0</TargetFramework>
 		<ToolCommandName>SteeleTerm</ToolCommandName>
 		<Version>0.7.6</Version>
+		<Platforms>x64</Platforms>
 	</PropertyGroup>
 	<ItemGroup>
 		<Compile Remove="generated/**/*.cs" />
@@ -33,7 +35,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="SSH.NET" Version="2026.0.0" />
-		<PackageReference Include="System.IO.Ports" Version="11.0.0-preview.7.26381.103" />
-		<PackageReference Include="System.Management" Version="11.0.0-preview.7.26381.103" />
+		<PackageReference Include="System.IO.Ports" Version="11.0.0-rc.1.26425.128" />
+		<PackageReference Include="System.Management" Version="11.0.0-rc.1.26425.128" />
 	</ItemGroup>
 </Project>

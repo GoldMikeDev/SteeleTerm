@@ -19,7 +19,7 @@ namespace Windows.Win32
 {
 	namespace System.Com
 	{
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct ELEMDESC_unmanaged
 		{
 			internal winmdroot.System.Com.TYPEDESC tdesc;
@@ -35,7 +35,7 @@ namespace Windows.Win32
 			internal ref winmdroot.System.Ole.PARAMDESC_unmanaged paramdesc => ref this.Anonymous.paramdesc;
 
 			[StructLayout(LayoutKind.Explicit)]
-			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+			[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 			internal partial struct _Anonymous_e__Union_unmanaged
 			{
 				/// <summary>The information for remoting the element. This information is for backward compatibility.</summary>

@@ -22,7 +22,7 @@ namespace Windows.Win32
 		/// <summary>Flags that indicate conditions for creating and deleting the object and access modes for the object.</summary>
 		/// <remarks>You can combine these flags, but you can only choose one flag from each group of related flags. Typically one flag from each of the access and sharing groups must be specified for all functions and methods which use these constants. Flags from other groups are optional.</remarks>
 		[Flags]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal enum STGM : uint
 		{
 			STGM_DIRECT = 0x00000000,

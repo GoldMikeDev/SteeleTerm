@@ -19,7 +19,7 @@ namespace Windows.Win32
 {
 	namespace System.Ole
 	{
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct PARAMDESC_unmanaged
 		{
 			internal unsafe winmdroot.System.Ole.PARAMDESCEX_unmanaged* pparamdescex;

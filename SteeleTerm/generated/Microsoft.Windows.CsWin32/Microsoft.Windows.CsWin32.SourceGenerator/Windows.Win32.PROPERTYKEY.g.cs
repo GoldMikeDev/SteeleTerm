@@ -26,7 +26,7 @@ namespace Windows.Win32
 		/// <para>This doc was truncated.</para>
 		/// <para><see href="https://learn.microsoft.com/windows/win32/api/wtypes/ns-wtypes-propertykey#">Read more on learn.microsoft.com</see>.</para>
 		/// </remarks>
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct PROPERTYKEY
 		{
 			/// <summary>

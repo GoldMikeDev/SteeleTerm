@@ -24,7 +24,7 @@ namespace Windows.Win32
 		/// <para>The structure name <b>BLOB</b> comes from the acronym BLOB, which stands for Binary Large Object. This structure does not describe the nature of the data pointed to by <b>pBlobData</b>. <div class="alert"><b>Note</b>  Windows Sockets defines a similar <b>BLOB</b> structure in Wtypes.h. Using both header files in the same source code file creates redefinition–compile time errors.</div> <div> </div></para>
 		/// <para><see href="https://learn.microsoft.com/windows/win32/api/nspapi/ns-nspapi-blob#">Read more on learn.microsoft.com</see>.</para>
 		/// </remarks>
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal partial struct BLOB
 		{
 			/// <summary>Size of the block of data pointed to by <b>pBlobData</b>, in bytes.</summary>

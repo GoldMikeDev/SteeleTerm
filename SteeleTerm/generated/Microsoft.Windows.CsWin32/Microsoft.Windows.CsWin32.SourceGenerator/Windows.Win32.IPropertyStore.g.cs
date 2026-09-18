@@ -20,7 +20,7 @@ namespace Windows.Win32
 	namespace UI.Shell.PropertiesSystem
 	{
 		[Guid("886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99"),InterfaceType(ComInterfaceType.InterfaceIsIUnknown),ComImport()]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal interface IPropertyStore
 		{
 			/// <summary>This method returns a count of the number of properties that are attached to the file.</summary>

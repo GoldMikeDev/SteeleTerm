@@ -26,7 +26,7 @@ namespace Windows.Win32
 		/// <para><see href="https://learn.microsoft.com/windows/win32/api/wtypes/ne-wtypes-varenum#">Read more on learn.microsoft.com</see>.</para>
 		/// </remarks>
 		[Flags]
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal enum VARENUM : ushort
 		{
 			/// <summary>Not specified.</summary>

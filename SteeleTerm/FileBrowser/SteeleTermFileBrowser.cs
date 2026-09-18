@@ -1,37 +1,35 @@
-﻿using EnumExt = Windows.Win32.Devices_PortableDevices_IEnumPortableDeviceObjectIDs_Extensions;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using SteeleTerm.AddonModules;
 using SteeleTerm.FileBrowser.Wpd;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 using Windows.Win32;
-using Windows.Win32.Devices.PortableDevices;
 using Windows.Win32.Foundation;
+using Windows.Win32.Storage.FileSystem;
+using Windows.Win32.UI.Shell;
 using static SteeleTerm.SteeleTerm;
-using static Windows.Win32.Devices_PortableDevices_IPortableDeviceValues_Extensions;
 namespace SteeleTerm.FileBrowser
 {
 	partial class SteeleTermFileBrowser
 	{
         public static string? FileBrowser(string? startDir, bool allowOpen)
 		{
-			string promptFileBrowser = " 📂 > ";
-			string cwd = startDir ?? "";
-			bool inThisPc = false;
+			const string promptFileBrowser = " 📂 > ";
+			var cwd = startDir ?? "";
+			var inThisPc = false;
             Span<PWSTR> ids = stackalloc PWSTR[1];
             if (cwd.Length == 0 || !Directory.Exists(cwd)) cwd = Directory.GetCurrentDirectory();
 			while (true)
 			{
-				string currentDir = Directory.GetCurrentDirectory();
+				var currentDir = Directory.GetCurrentDirectory();
 				string[] dirs = [];
 				string[] files = [];
 				var items = new List<(bool IsDir, string Name, string FullPath)>();
 				if (inThisPc)
 				{
 					var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-					bool redirected = Console.IsOutputRedirected;
-					int scanTop = Console.CursorTop;
+					var redirected = Console.IsOutputRedirected;
+					var scanTop = Console.CursorTop;
 					ConsoleSpinner? scanSpinner = null;
 					if (!redirected)
 					{
@@ -40,49 +38,48 @@ namespace SteeleTerm.FileBrowser
 						scanSpinner.Start("Scanning drives ");
 					}
 					else Console.WriteLine($"{promptFileBrowser}Scanning drives...");
-					var drives = DriveInfo.GetDrives();
+					DriveInfo[] drives = DriveInfo.GetDrives();
 					var uncCache = new Dictionary<string, string?>(StringComparer.OrdinalIgnoreCase);
 					List<(string deviceID, string deviceName)> wpd = WpdDevices.GetAllDevices();
-					for (int d = 0; d < drives.Length; d++)
+					foreach (var di in drives)
 					{
-						var di = drives[d];
-						string root = di.Name;
-						string drive = root.TrimEnd('\\');
-						if (drive.Length >= 2 && drive[1] == ':') drive = char.ToUpperInvariant(drive[0]) + ":";
-						string label = "";
+						var root = di.Name;
+						var drive = root.TrimEnd('\\');
+						if (drive is [_, ':', ..]) drive = char.ToUpperInvariant(drive[0]) + ":";
+						var label = "";
 						try { label = GetVolumeLabel(di); }
 						catch
 						{
-							SHGetFileInfo(root, 0, out SHFILEINFO shfi, (uint)Marshal.SizeOf<SHFILEINFO>(), 0x0200);
-							unsafe { label = new string(shfi.szDisplayName).Trim(); }
+							unsafe
+							{
+								SHFILEINFOW shfi = default;
+								var result = PInvoke.SHGetFileInfo(root, (FILE_FLAGS_AND_ATTRIBUTES)0, ref shfi, (uint)Marshal.SizeOf<SHFILEINFOW>(), SHGFI_FLAGS.SHGFI_DISPLAYNAME);
+								label = new string(shfi.szDisplayName.AsSpan()).Trim();
+							}
 						}
 						if (di.DriveType != DriveType.Network)
 						{
-							string disp = label.Length == 0 ? $"({drive})" : $"({drive}) {label}";
+							var disp = label.Length == 0 ? $"({drive})" : $"({drive}) {label}";
 							items.Add((true, disp, root));
 							continue;
 						}
-						string disp2 = label.Length == 0 ? $"({drive})" : $"({drive}) {label}";
-						if (!uncCache.TryGetValue(drive, out string? unc))
+						var disp2 = label.Length == 0 ? $"({drive})" : $"({drive}) {label}";
+						if (!uncCache.TryGetValue(drive, out var unc))
 						{
 							string? uncResult = null;
 							var t = new Thread(() => { try { uncResult = TryGetUncForDrive(drive); } catch { } }) { IsBackground = true };
 							t.Start();
-							if (t.Join(250)) unc = uncResult;
-							else unc = null;
+							unc = t.Join(250) ? uncResult : null;
 							uncCache[drive] = unc;
 						}
 						if (!string.IsNullOrEmpty(unc)) disp2 += $" {unc}";
 						items.Add((true, disp2, root));
 						seen.Add(drive);
 					}
-					if (wpd != null)
+					foreach (var (deviceID, deviceName) in wpd)
 					{
-						foreach (var (deviceID, deviceName) in wpd)
-						{
-							string disp = $"(WPD) {deviceName}";
-							items.Add((true, disp, "wpd:" + deviceID));
-						}
+						var disp = $"(WPD) {deviceName}";
+						items.Add((true, disp, "wpd:" + deviceID));
 					}
 					scanSpinner?.RequestStopAndFlush();
 					if (!redirected)
@@ -98,11 +95,11 @@ namespace SteeleTerm.FileBrowser
 							foreach (var letter in net.GetSubKeyNames())
 							{
 								using var dk = net.OpenSubKey(letter);
-								string? unc = dk?.GetValue("RemotePath") as string;
+								var unc = dk?.GetValue("RemotePath") as string;
 								if (string.IsNullOrEmpty(unc)) continue;
-								string drive = letter.Length > 0 ? char.ToUpperInvariant(letter[0]) + ":" : "";
+								var drive = letter.Length > 0 ? char.ToUpperInvariant(letter[0]) + ":" : "";
 								if (seen.Contains(drive)) continue;
-								string disp = $"({drive}) {unc}";
+								var disp = $"({drive}) {unc}";
 								items.Add((true, disp, unc)); // FullPath is UNC so traversal works
 								seen.Add(drive);
 							}
@@ -116,27 +113,27 @@ namespace SteeleTerm.FileBrowser
 					{
 						try
 						{
-							string deviceID = cwd[4..];
+							var deviceID = cwd[4..];
 							List<(string name, string objID)> dirsWPD = [];
 							List<(string name, string objID)> filesWPD = [];
-							IPortableDevice device = PortableDeviceFactory.Create();
+							var device = PortableDeviceFactory.Create();
 							device.Open(deviceID, null);
-							device.Content(out IPortableDeviceContent content);
-							content.EnumObjects(0, "DEVICE", null, out IEnumPortableDeviceObjectIDs enumerator);
-							content.Properties(out IPortableDeviceProperties properties);
+							device.Content(out var content);
+							content.EnumObjects(0, "DEVICE", null, out var enumerator);
+							content.Properties(out var properties);
                             PROPERTYKEY WPD_OBJECT_NAME = new() { fmtid = new Guid("EF6B490D-5CD8-437A-AFFC-DA8B60EE4A3C"), pid = 4 };
                             PROPERTYKEY WPD_OBJECT_CONTENT_TYPE = new() { fmtid = new Guid("EF6B490D-5CD8-437A-AFFC-DA8B60EE4A3C"), pid = 7 };
                             while (true)
 							{
 								uint fetched = 0;
-                                HRESULT hr = EnumExt.Next(enumerator, ids, ref fetched);
+                                var hr = enumerator.Next(ids, ref fetched);
 								if (hr != 0 || fetched == 0) break;
-                                string objID = ids[0].ToString();
-                                properties.GetValues(objID, null, out IPortableDeviceValues values);
-                                values.GetStringValue(WPD_OBJECT_NAME, out PWSTR namePwstr);
-                                string name = namePwstr.ToString();
-                                values.GetGuidValue(WPD_OBJECT_CONTENT_TYPE, out Guid contentType);
-								bool isDir = contentType == new Guid("27E2E392-A111-48E0-AB0C-E17705A05F85");
+								var objID = ids[0].ToString();
+                                properties.GetValues(objID, null, out var values);
+                                values.GetStringValue(WPD_OBJECT_NAME, out var namePwstr);
+                                var name = namePwstr.ToString();
+                                values.GetGuidValue(WPD_OBJECT_CONTENT_TYPE, out var contentType);
+                                var isDir = contentType == new Guid("27E2E392-A111-48E0-AB0C-E17705A05F85");
 								if (isDir) { dirsWPD.Add((name, objID)); }
 								else { filesWPD.Add((name, objID)); }
 							}
@@ -146,10 +143,10 @@ namespace SteeleTerm.FileBrowser
 							SortNatural(files);
 							List<(string name, string objID)> dirsWPDsort = [];
 							List<(string name, string objID)> filesWPDsort = [];
-							foreach (string directory in dirs) { string objID = dirsWPD[dirsWPD.FindIndex(d => d.name == directory)].objID; dirsWPDsort.Add((directory, objID)); }
-							foreach (string file in files) { string objID = filesWPD[filesWPD.FindIndex(f => f.name == file)].objID; filesWPDsort.Add((file, objID)); }
-							for (int d = 0; d < dirs.Length; d++) items.Add((true, dirs[d], $"wpd:{deviceID}:{dirsWPDsort[d].objID}"));
-							for (int f = 0; f < files.Length; f++) items.Add((false, files[f], $"wpd:{deviceID}:{filesWPDsort[f].objID}"));
+							dirsWPDsort.AddRange(from directory in dirs let objID = dirsWPD[dirsWPD.FindIndex(d => d.name == directory)].objID select (directory, objID));
+							filesWPDsort.AddRange(from file in files let objID = filesWPD[filesWPD.FindIndex(f => f.name == file)].objID select (file, objID));
+							items.AddRange(dirs.Select((t, d) => (true, t, $"wpd:{deviceID}:{dirsWPDsort[d].objID}")));
+							items.AddRange(files.Select((t, f) => (false, t, $"wpd:{deviceID}:{filesWPDsort[f].objID}")));
 						}
 						catch { Console.WriteLine($"{promptFileBrowser}WPD device error."); var parent = Directory.GetParent(cwd); if (parent != null) { cwd = parent.FullName; continue; } inThisPc = true; continue; }
 					}
@@ -159,29 +156,29 @@ namespace SteeleTerm.FileBrowser
 						catch { Console.WriteLine($"{promptFileBrowser}Cannot access directory."); var parent = Directory.GetParent(cwd); if (parent != null) { cwd = parent.FullName; continue; } inThisPc = true; continue; }
 						SortNatural(dirs);
 						SortNatural(files);
-						for (int d = 0; d < dirs.Length; d++) items.Add((true, Path.GetFileName(dirs[d]), dirs[d]));
-						for (int f = 0; f < files.Length; f++) items.Add((false, Path.GetFileName(files[f]), files[f]));
+						items.AddRange(dirs.Select(t => (true, Path.GetFileName(t), t)));
+						items.AddRange(files.Select(t => (false, Path.GetFileName(t), t)));
 					}
 				}
-				int count = items.Count;
+				var count = items.Count;
 				var display = new List<string>(count);
-				for (int k = 0; k < count; k++)
+				for (var k = 0; k < count; k++)
 				{
-					string icon = inThisPc ? (items[k].FullPath.StartsWith("wpd:", StringComparison.Ordinal) ? "📱" : "💽") : (items[k].IsDir ? "📁" : GetFileIcon(items[k].Name));
-					string s = $"{k + 1:0000}{icon} {items[k].Name}";
+					var icon = inThisPc ? (items[k].FullPath.StartsWith("wpd:", StringComparison.Ordinal) ? "📱" : "💽") : (items[k].IsDir ? "📁" : GetFileIcon(items[k].Name));
+					var s = $"{k + 1:0000}{icon} {items[k].Name}";
 					display.Add(s);
 				}
 				int consoleWidth;
 				try { consoleWidth = Console.WindowWidth; } catch { consoleWidth = 64; }
 				consoleWidth = Math.Max(64, consoleWidth);
-				int fileBrowserWidth = Math.Max(64, consoleWidth);
-				int itemWidth = 31;
-				int cols = Math.Max(2, fileBrowserWidth / 32);
-				int total = cols * 32;
+				var fileBrowserWidth = Math.Max(64, consoleWidth);
+				const int itemWidth = 31;
+				var cols = Math.Max(2, fileBrowserWidth / 32);
+				var total = cols * 32;
 				string bar = new('-', total - 1);
 				Console.WriteLine();
-				bool redirectedRender = Console.IsOutputRedirected;
-				int renderTop = Console.CursorTop;
+				var redirectedRender = Console.IsOutputRedirected;
+				var renderTop = Console.CursorTop;
 				ConsoleSpinner? renderSpinner = null;
 				if (!redirectedRender)
 				{
@@ -190,14 +187,14 @@ namespace SteeleTerm.FileBrowser
 					renderSpinner = new ConsoleSpinner(consoleLock, promptFileBrowser, 100, 150);
 					renderSpinner.Start(inThisPc ? "Building drive list " : "Building table ");
 				}
-				byte[] colour = new byte[count];
+				var colour = new byte[count];
 				if (!inThisPc)
 				{
-					for (int k = 0; k < count; k++)
+					for (var k = 0; k < count; k++)
 					{
 						try
 						{
-							string p = items[k].FullPath;
+							var p = items[k].FullPath;
 							if (p.StartsWith(@"\\", StringComparison.Ordinal)) continue;
 							var attr = File.GetAttributes(p);
 							if ((attr & FileAttributes.Encrypted) != 0) colour[k] = 1;
@@ -213,31 +210,39 @@ namespace SteeleTerm.FileBrowser
 					try
 					{
 						var root = Path.GetPathRoot(cwd);
-						if (!string.IsNullOrEmpty(root) && root.StartsWith(@"\\", StringComparison.Ordinal)) header = $"This PC\\[UNC] {cwd}\\";
-						else if (!string.IsNullOrEmpty(root))
+						switch (string.IsNullOrEmpty(root))
 						{
-							var di = new DriveInfo(root);
-							string drive = di.Name.TrimEnd('\\'); // "C:"
-							string fmt = di.IsReady ? di.DriveFormat : "NOTREADY";
-							string label = di.IsReady ? (di.VolumeLabel ?? "") : "";
-							label = label.Trim();
-							header = label.Length == 0 ? $"This PC\\[{fmt}] {cwd}" : $"This PC\\[{fmt}] {label} {cwd}\\";
+							case false when root.StartsWith(@"\\", StringComparison.Ordinal):
+								header = $@"This PC\[UNC] {cwd}\";
+								break;
+							case false:
+							{
+								var di = new DriveInfo(root);
+								var drive = di.Name.TrimEnd('\\'); // "C:"
+								var fmt = di.IsReady ? di.DriveFormat : "NOTREADY";
+								var label = di.IsReady ? (di.VolumeLabel ?? "") : "";
+								label = label.Trim();
+								header = label.Length == 0 ? $"This PC\\[{fmt}] {cwd}" :  $@"This PC\[{fmt}] {label} {cwd}\";
+								break;
+							}
+							default:
+								header = $@"This PC\[PATH] {cwd}\";
+								break;
 						}
-						else header = $"This PC\\[PATH] {cwd}\\";
 					}
-					catch { header = $"This PC\\[FS] {cwd}\\"; }
+					catch { header = $@"This PC\[FS] {cwd}\"; }
 				}
-				string pathLine = header.Length > total ? string.Concat(header.AsSpan(0, Math.Max(0, total - 3)), "...") : header;
-				int rows = Math.Max(((count + cols - 1) / cols), 16);
+				var pathLine = header.Length > total ? string.Concat(header.AsSpan(0, Math.Max(0, total - 3)), "...") : header;
+				var rows = Math.Max(((count + cols - 1) / cols), 16);
 				var cellText = new string?[rows, cols];
 				var cellIdx = new int[rows, cols];
-				for (int r = 0; r < rows; r++)
+				for (var r = 0; r < rows; r++)
 				{
-					for (int c = 0; c < cols; c++)
+					for (var c = 0; c < cols; c++)
 					{
-						int idx = c * rows + r;
+						var idx = c * rows + r;
 						if (idx >= count) break;
-						string s = display[idx];
+						var s = display[idx];
 						if (s.Length > itemWidth) s = string.Concat(s.AsSpan(0, Math.Max(0, itemWidth - 3)), "...");
 						cellText[r, c] = s.PadRight(itemWidth);
 						cellIdx[r, c] = idx;
@@ -251,18 +256,22 @@ namespace SteeleTerm.FileBrowser
 				}
 				Console.WriteLine(" " + pathLine.PadRight(total - 1));
 				Console.WriteLine(" " + bar);
-				for (int r = 0; r < rows; r++)
+				for (var r = 0; r < rows; r++)
 				{
 					Console.Write(" ");
-					for (int c = 0; c < cols; c++)
+					for (var c = 0; c < cols; c++)
 					{
-						string? cell = cellText[r, c];
+						var cell = cellText[r, c];
 						if (cell == null) break;
 						if (c != 0) Console.Write("|");
-						int idx = cellIdx[r, c];
+						var idx = cellIdx[r, c];
 						var old = Console.ForegroundColor;
-						if (colour[idx] == 1) Console.ForegroundColor = ConsoleColor.Green;
-						else if (colour[idx] == 2) Console.ForegroundColor = ConsoleColor.Blue;
+						Console.ForegroundColor = colour[idx] switch
+						{
+							1 => ConsoleColor.Green,
+							2 => ConsoleColor.Blue,
+							_ => Console.ForegroundColor
+						};
 						Console.Write(cell);
 						Console.ForegroundColor = old;
 					}
@@ -272,7 +281,7 @@ namespace SteeleTerm.FileBrowser
 				Console.WriteLine(" Commands: #### = open/select | b = go up a directory | exit = close file browser | Exit = close SteeleTerm");
 				Console.WriteLine();
                 Console.Write(promptFileBrowser);
-                string? input = ReadToken(promptFileBrowser, "", true, true, true);
+                var input = ReadToken(promptFileBrowser, "", true, true, true);
 				if (input == null) continue;
 				input = input.Trim();
 				if (input.Length == 0) continue;
@@ -289,60 +298,45 @@ namespace SteeleTerm.FileBrowser
 				if (input.Length >= 2 && ((input[0] == '"' && input[^1] == '"') || (input[0] == '\'' && input[^1] == '\''))) input = input[1..^1];
 				if (File.Exists(input)) return Path.GetFullPath(input);
 				if (Directory.Exists(input)) { cwd = Path.GetFullPath(input); continue; }
-				if (int.TryParse(input, out int n) && n >= 1 && n <= count)
+				if (!int.TryParse(input, out var n) || n < 1 || n > count) continue;
+				if (allowOpen && !items[n - 1].IsDir)
 				{
-					if (allowOpen && !items[n - 1].IsDir)
-					{
-						try { Process.Start(new ProcessStartInfo { FileName = items[n - 1].FullPath, UseShellExecute = true }); }
-						catch (Exception ex) { Console.WriteLine($"{promptFileBrowser}Cannot open file: {ex.Message}"); }
-						continue;
-					}
-					if (items[n - 1].IsDir) { cwd = items[n - 1].FullPath; inThisPc = false; continue; }
-					return items[n - 1].FullPath;
+					try { Process.Start(new ProcessStartInfo { FileName = items[n - 1].FullPath, UseShellExecute = true }); }
+					catch (Exception ex) { Console.WriteLine($"{promptFileBrowser}Cannot open file: {ex.Message}"); }
+					continue;
 				}
+				if (!items[n - 1].IsDir) return items[n - 1].FullPath;
+				cwd = items[n - 1].FullPath; inThisPc = false; continue;
 			}
 		}
 		static string GetVolumeLabel(DriveInfo drive)
 		{
-			string label;
-			label = drive.VolumeLabel.Trim();
-			if (string.IsNullOrEmpty(label)) { throw new NoLabelException(); }
-			return label;
+			var label = drive.VolumeLabel.Trim();
+			return string.IsNullOrEmpty(label) ? throw new NoLabelException() : label;
 		}
 		public class NoLabelException : Exception
 		{
-			public NoLabelException() { }
 			public override string? StackTrace => null;
 		}
-		[LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)] private static partial nint SHGetFileInfo(string szDisplayName, int dwFileAttributes, out SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
-		[StructLayout(LayoutKind.Sequential)] struct SHFILEINFO
-		{
-			public nint hIcon;
-			public int iIcon;
-			public uint dwAttributes;
-			public unsafe fixed char szDisplayName[260];
-			public unsafe fixed char szTypeName[80];
-		}
-		[DllImport("mpr.dll", CharSet = CharSet.Unicode)] static extern int WNetGetConnection(string localName, StringBuilder remoteName, ref int length);
 		static string? TryGetUncForDrive(string driveLetter)
 		{
-			try
+            if (!OperatingSystem.IsWindowsVersionAtLeast(5, 0)) return null;
+            try
 			{
-				int len = 1024;
-				var sb = new StringBuilder(len);
-				int rc = WNetGetConnection(driveLetter, sb, ref len);
-				if (rc == 0) return sb.ToString();
-			}
+                Span<char> buffer = stackalloc char[1024];
+                var len = (uint)buffer.Length;
+                var rc = PInvoke.WNetGetConnection(driveLetter, buffer, ref len);
+                if (rc == WIN32_ERROR.NO_ERROR) return new string(buffer[..(int)len]).TrimEnd('\0');
+            }
 			catch { }
 			return null;
 		}
-        static string[] SortNatural(string[] input, string[]? output = null)
+        static void SortNatural(string[] input, string[]? output = null)
 		{
 			if (output == null || ReferenceEquals(output, input)) output = input;
 			else if (output.Length != input.Length) throw new ArgumentException("Output array is not the same length as input array.", nameof(output));
 			Array.Copy(input, output, input.Length);
 			Array.Sort(output, WinSort.CompareNatural);
-			return output;
 		}
 		static partial class WinSort
 		{
@@ -352,18 +346,17 @@ namespace SteeleTerm.FileBrowser
 		static readonly HashSet<string> compressedArchiveExts = new(StringComparer.Ordinal) { "7z", "apk", "arc", "arj", "bz2", "cab", "cpio", "gz", "iso", "jar", "lha", "lzh", "lz", "lzma", "lzo", "rar", "tar", "tbz2", "tgz", "txz", "xz", "zip", "zipx" };
 		static readonly HashSet<string> executableExts = new(StringComparer.Ordinal) { "appx", "appxbundle", "com", "exe", "msi", "msix", "msixbundle", "msp" };
 		static readonly HashSet<string> imageExts = new(StringComparer.Ordinal) { "avif", "bmp", "gif", "heic", "heif", "ico", "jpeg", "jpg", "png", "svg", "tif", "tiff", "webp" };
+		static readonly HashSet<string> shortcutExts = new(StringComparer.Ordinal) { "lnk" };
 		static string GetFileIcon(string fileName)
 		{
 			var ext = Path.GetExtension(fileName);
 			if (ext.Length != 0 && ext[0] == '.') ext = ext[1..];
 			ext = ext.ToLowerInvariant();
-			if (ext.Length != 0)
-			{
-				if (compressedArchiveExts.Contains(ext)) return "📦";
-				if (executableExts.Contains(ext)) return "⚙️";
-				if (imageExts.Contains(ext)) return "🌄";
-			}
-			return "📄";
+			if (ext.Length == 0) return "📄";
+			if (compressedArchiveExts.Contains(ext)) return "📦";
+			if (executableExts.Contains(ext)) return "⚙️";
+			if (imageExts.Contains(ext)) return "🌄";
+			return shortcutExts.Contains(ext) ? "↗️" : "📄";
 		}
 	}
 }

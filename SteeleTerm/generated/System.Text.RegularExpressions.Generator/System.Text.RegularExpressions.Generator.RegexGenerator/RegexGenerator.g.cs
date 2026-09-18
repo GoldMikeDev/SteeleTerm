@@ -19,7 +19,7 @@ namespace SteeleTerm.AddonModules.Updater
         /// ○ Match the string "&lt;/Version&gt;".<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.23019")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.42308")]
         private static partial global::System.Text.RegularExpressions.Regex VersionRegex() => global::System.Text.RegularExpressions.Generated.VersionRegex_0.Instance;
     }
 }
@@ -44,7 +44,7 @@ namespace SteeleTerm.Serial
         /// ○ Match ')'.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.23019")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.42308")]
         private static partial global::System.Text.RegularExpressions.Regex COM() => global::System.Text.RegularExpressions.Generated.COM_1.Instance;
     }
 }
@@ -75,7 +75,7 @@ namespace SteeleTerm.Serial
         ///     ○ Match a hexadecimal digit exactly 4 times.<br/>
         /// </code>
         /// </remarks>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.23019")]
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.42308")]
         private static partial global::System.Text.RegularExpressions.Regex VIDPID() => global::System.Text.RegularExpressions.Generated.VIDPID_2.Instance;
     }
 }
@@ -93,7 +93,7 @@ namespace System.Text.RegularExpressions.Generated
     using System.Threading;
 
     /// <summary>Custom <see cref="Regex"/>-derived type for the VersionRegex method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.23019")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.42308")]
     [SkipLocalsInit]
     file sealed class VersionRegex_0 : Regex
     {
@@ -260,7 +260,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the COM method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.23019")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.42308")]
     [SkipLocalsInit]
     file sealed class COM_1 : Regex
     {
@@ -423,7 +423,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Custom <see cref="Regex"/>-derived type for the VIDPID method.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.23019")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.42308")]
     [SkipLocalsInit]
     file sealed class VIDPID_2 : Regex
     {
@@ -641,7 +641,7 @@ namespace System.Text.RegularExpressions.Generated
     }
     
     /// <summary>Helper methods used by generated <see cref="Regex"/>-derived implementations.</summary>
-    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.23019")]
+    [GeneratedCodeAttribute("System.Text.RegularExpressions.Generator", "10.0.14.42308")]
     file static class Utilities
     {
         /// <summary>Default timeout value set in <see cref="AppContext"/>, or <see cref="Regex.InfiniteMatchTimeout"/> if none was set.</summary>

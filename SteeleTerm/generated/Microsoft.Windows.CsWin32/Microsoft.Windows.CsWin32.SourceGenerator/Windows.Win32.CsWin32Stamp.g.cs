@@ -8,4 +8,4 @@
 // ------------------------------------------------------------------------------
 
 #pragma warning disable CS1591,CS1573,CS0465,CS0649,CS8019,CS1570,CS1584,CS1658,CS0436,CS8981,SYSLIB1092,CS3016
-[assembly: global::System.Reflection.AssemblyMetadata("Microsoft.Windows.CsWin32","0.3.298+e4a7320acd.RR")]
+[assembly: global::System.Reflection.AssemblyMetadata("Microsoft.Windows.CsWin32","0.3.333+1404ffd3a1.RR")]

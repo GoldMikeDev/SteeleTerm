@@ -23,7 +23,7 @@ namespace Windows.Win32
 		/// <remarks>
 		/// <para><see href="https://learn.microsoft.com/windows/win32/api/oaidl/ne-oaidl-syskind">Learn more about this API from learn.microsoft.com</see>.</para>
 		/// </remarks>
-		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.298+e4a7320acd.RR")]
+		[global::System.CodeDom.Compiler.GeneratedCode("Microsoft.Windows.CsWin32", "0.3.333+1404ffd3a1.RR")]
 		internal enum SYSKIND
 		{
 			/// <summary>The target operating system for the type library is 16-bit Windows. By default, data members are packed.</summary>
