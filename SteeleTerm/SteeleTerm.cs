@@ -8,9 +8,9 @@ using System.Text;
 [assembly: SupportedOSPlatform("windows")]
 namespace SteeleTerm
 {
-	partial class SteeleTerm
+	 class SteeleTerm
 	{
-		public static readonly Lock consoleLock = new();
+		public static readonly Lock ConsoleLock = new();
 		static readonly string[] availableCommands = ["--fileBrowser", "--help", "--serial", "--ssh", "--update", "--updateMajor", "--updateMinor"];
 		static int Main(string[] args)
 		{
@@ -67,7 +67,7 @@ namespace SteeleTerm
 		{
 			int startTop;
 			int startLeft;
-			lock (consoleLock)
+			lock (ConsoleLock)
 			{
 				if (printPrompt) Console.Write($"{prompt}{promptText}");
 				startTop = Console.CursorTop;
@@ -82,7 +82,7 @@ namespace SteeleTerm
 				var echoNow = (echoEnabled?.Invoke() ?? echo);
 				if (lastEcho && !echoNow && echoedCount != 0)
 				{
-					lock (consoleLock)
+					lock (ConsoleLock)
 					{
 						for (var i = 0; i < echoedCount; i++)
 						{
@@ -101,7 +101,7 @@ namespace SteeleTerm
 					case ConsoleKey.Enter:
 					{
 						if (!commitNewlineOnEnter) return buf.Length == 0 ? null : buf.ToString();
-						lock (consoleLock) { Console.WriteLine(""); }
+						lock (ConsoleLock) { Console.WriteLine(""); }
 						return buf.Length == 0 ? null : buf.ToString();
 					}
 					case ConsoleKey.Backspace when buf.Length == 0:
@@ -111,7 +111,7 @@ namespace SteeleTerm
 						buf.Length--;
 						if (echoNow && echoedCount != 0)
 						{
-							lock (consoleLock)
+							lock (ConsoleLock)
 							{
 								var top = Console.CursorTop;
 								var left = Console.CursorLeft;
@@ -126,7 +126,7 @@ namespace SteeleTerm
 				if (char.IsControl(k.KeyChar)) continue;
 				buf.Append(k.KeyChar);
 				if (!echoNow) continue;
-				lock (consoleLock) { Console.Write(k.KeyChar); } echoedCount++;
+				lock (ConsoleLock) { Console.Write(k.KeyChar); } echoedCount++;
 			}
 		}
 	}

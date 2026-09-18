@@ -6,4 +6,5 @@ IPortableDeviceManager
 IPortableDeviceProperties
 IPortableDeviceValues
 SHGetFileInfo
+StrCmpLogicalW
 WNetGetConnection

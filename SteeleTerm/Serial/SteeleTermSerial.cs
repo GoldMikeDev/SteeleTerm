@@ -98,7 +98,7 @@ namespace SteeleTerm.Serial
 					var stop = false;
 					var forceLineStart = 0;
 					string? suppressEchoLine = null;
-					var rxSpinner = new ConsoleSpinner(SteeleTerm.consoleLock, prompt, 100, 150);
+					var rxSpinner = new ConsoleSpinner(SteeleTerm.ConsoleLock, prompt, 100, 150);
 					var secretMode = 0;
 					var suppressSecretEchoState = 0;
 					bool echoEnabled() => Volatile.Read(ref secretMode) == 0;
@@ -119,7 +119,7 @@ namespace SteeleTerm.Serial
 							{
 								var n = serialPort.Read(buf, 0, buf.Length);
 								if (n <= 0) continue;
-								lock (SteeleTerm.consoleLock)
+								lock (SteeleTerm.ConsoleLock)
 								{
 									if (Interlocked.Exchange(ref forceLineStart, 0) != 0) atLineStart = true;
 									for (var i = 0; i < n; i++)
@@ -296,7 +296,7 @@ namespace SteeleTerm.Serial
 									break;
 							}
 						}, echoEnabled);
-						lock (SteeleTerm.consoleLock) { Console.WriteLine(""); Interlocked.Exchange(ref forceLineStart, 1); }
+						lock (SteeleTerm.ConsoleLock) { Console.WriteLine(""); Interlocked.Exchange(ref forceLineStart, 1); }
 						if (line == null) { Volatile.Write(ref secretMode, 0); serialPort.Write("\r"); continue; }
 						Volatile.Write(ref secretMode, 0);
 						if (string.Equals(line.Trim(), "Exit", StringComparison.Ordinal))

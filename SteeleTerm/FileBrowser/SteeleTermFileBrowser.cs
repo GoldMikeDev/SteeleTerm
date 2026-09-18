@@ -3,6 +3,7 @@ using SteeleTerm.AddonModules;
 using SteeleTerm.FileBrowser.Wpd;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Runtime.Versioning;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.Storage.FileSystem;
@@ -10,10 +11,13 @@ using Windows.Win32.UI.Shell;
 using static SteeleTerm.SteeleTerm;
 namespace SteeleTerm.FileBrowser
 {
-	partial class SteeleTermFileBrowser
+	 class SteeleTermFileBrowser
 	{
-        public static string? FileBrowser(string? startDir, bool allowOpen)
-		{
+		static bool sortUnicode;
+		[SupportedOSPlatformGuard("windows5.0")] public static bool Win5 => OperatingSystem.IsWindowsVersionAtLeast(5);
+		[SupportedOSPlatformGuard("windows5.1.2600")] public static bool Win512600 => OperatingSystem.IsWindowsVersionAtLeast(5, 1, 2600);
+		public static string? FileBrowser(string? startDir, bool allowOpen)
+        {
 			const string promptFileBrowser = " 📂 > ";
 			var cwd = startDir ?? "";
 			var inThisPc = false;
@@ -33,7 +37,7 @@ namespace SteeleTerm.FileBrowser
 					ConsoleSpinner? scanSpinner = null;
 					if (!redirected)
 					{
-						scanSpinner = new ConsoleSpinner(consoleLock, promptFileBrowser, 100, 150);
+						scanSpinner = new ConsoleSpinner(ConsoleLock, promptFileBrowser, 100, 150);
 						if (Console.CursorLeft != 0) Console.WriteLine("");
 						scanSpinner.Start("Scanning drives ");
 					}
@@ -50,10 +54,11 @@ namespace SteeleTerm.FileBrowser
 						try { label = GetVolumeLabel(di); }
 						catch
 						{
+							if (!Win512600) { break; }
 							unsafe
 							{
 								SHFILEINFOW shfi = default;
-								var result = PInvoke.SHGetFileInfo(root, (FILE_FLAGS_AND_ATTRIBUTES)0, ref shfi, (uint)Marshal.SizeOf<SHFILEINFOW>(), SHGFI_FLAGS.SHGFI_DISPLAYNAME);
+								fixed (char* rootChar = root) { _ = PInvoke.SHGetFileInfo(rootChar, (FILE_FLAGS_AND_ATTRIBUTES)0, &shfi, (uint)Marshal.SizeOf<SHFILEINFOW>(), SHGFI_FLAGS.SHGFI_DISPLAYNAME); }
 								label = new string(shfi.szDisplayName.AsSpan()).Trim();
 							}
 						}
@@ -109,6 +114,7 @@ namespace SteeleTerm.FileBrowser
 				}
 				else
 				{
+					sortUnicode = false;
 					if (cwd.StartsWith("wpd:", StringComparison.Ordinal))
 					{
 						try
@@ -184,7 +190,7 @@ namespace SteeleTerm.FileBrowser
 				{
 					if (Console.CursorLeft != 0) Console.WriteLine("");
 					renderTop = Console.CursorTop;
-					renderSpinner = new ConsoleSpinner(consoleLock, promptFileBrowser, 100, 150);
+					renderSpinner = new ConsoleSpinner(ConsoleLock, promptFileBrowser, 100, 150);
 					renderSpinner.Start(inThisPc ? "Building drive list " : "Building table ");
 				}
 				var colour = new byte[count];
@@ -212,7 +218,7 @@ namespace SteeleTerm.FileBrowser
 						var root = Path.GetPathRoot(cwd);
 						switch (string.IsNullOrEmpty(root))
 						{
-							case false when root.StartsWith(@"\\", StringComparison.Ordinal):
+							case false when root!.StartsWith(@"\\", StringComparison.Ordinal):
 								header = $@"This PC\[UNC] {cwd}\";
 								break;
 							case false:
@@ -280,6 +286,7 @@ namespace SteeleTerm.FileBrowser
 				Console.WriteLine(" " + bar);
 				Console.WriteLine(" Commands: #### = open/select | b = go up a directory | exit = close file browser | Exit = close SteeleTerm");
 				Console.WriteLine();
+				if (sortUnicode) { Console.WriteLine("⚠️ Natural sort failed. Falling back to Unicode sort"); Console.WriteLine(); }
                 Console.Write(promptFileBrowser);
                 var input = ReadToken(promptFileBrowser, "", true, true, true);
 				if (input == null) continue;
@@ -314,21 +321,18 @@ namespace SteeleTerm.FileBrowser
 			var label = drive.VolumeLabel.Trim();
 			return string.IsNullOrEmpty(label) ? throw new NoLabelException() : label;
 		}
-		public class NoLabelException : Exception
-		{
-			public override string? StackTrace => null;
-		}
+		public class NoLabelException : Exception { public override string? StackTrace => null; }
 		static string? TryGetUncForDrive(string driveLetter)
 		{
-            if (!OperatingSystem.IsWindowsVersionAtLeast(5, 0)) return null;
-            try
+			if (!Win5) return null;
+			try
 			{
-                Span<char> buffer = stackalloc char[1024];
-                var len = (uint)buffer.Length;
-                var rc = PInvoke.WNetGetConnection(driveLetter, buffer, ref len);
-                if (rc == WIN32_ERROR.NO_ERROR) return new string(buffer[..(int)len]).TrimEnd('\0');
-            }
-			catch { }
+				Span<char> buffer = stackalloc char[1024];
+				var len = (uint)buffer.Length;
+				var rc = PInvoke.WNetGetConnection(driveLetter, buffer, ref len);
+				if (rc == WIN32_ERROR.NO_ERROR) return new string(buffer[..(int)len]).TrimEnd('\0');
+			}
+			catch { return null; }
 			return null;
 		}
         static void SortNatural(string[] input, string[]? output = null)
@@ -336,12 +340,17 @@ namespace SteeleTerm.FileBrowser
 			if (output == null || ReferenceEquals(output, input)) output = input;
 			else if (output.Length != input.Length) throw new ArgumentException("Output array is not the same length as input array.", nameof(output));
 			Array.Copy(input, output, input.Length);
-			Array.Sort(output, WinSort.CompareNatural);
+			Array.Sort(output, CompareNatural);
 		}
-		static partial class WinSort
+		public static int CompareNatural(string a, string b)
 		{
-			[LibraryImport("shlwapi.dll", EntryPoint = "StrCmpLogicalW", StringMarshalling = StringMarshalling.Utf16)] internal static partial int StrCmpLogicalW(string psz1, string psz2);
-			public static int CompareNatural(string a, string b) { return StrCmpLogicalW(a, b); }
+			if (!Win512600) return 1;
+			try { return PInvoke.StrCmpLogical(a, b); }
+			catch
+			{
+				sortUnicode = true;
+				return string.CompareOrdinal(a, b);
+			}
 		}
 		static readonly HashSet<string> compressedArchiveExts = new(StringComparer.Ordinal) { "7z", "apk", "arc", "arj", "bz2", "cab", "cpio", "gz", "iso", "jar", "lha", "lzh", "lz", "lzma", "lzo", "rar", "tar", "tbz2", "tgz", "txz", "xz", "zip", "zipx" };
 		static readonly HashSet<string> executableExts = new(StringComparer.Ordinal) { "appx", "appxbundle", "com", "exe", "msi", "msix", "msixbundle", "msp" };

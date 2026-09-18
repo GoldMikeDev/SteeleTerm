@@ -52,7 +52,7 @@ namespace SteeleTerm.SSH
 				if (IPAddress.TryParse(hostAddress, out var literalIP)) hostIP = [literalIP];
 				else
 				{
-					var dnsSpinner = new ConsoleSpinner(SteeleTerm.consoleLock, prompt, 100, 150);
+					var dnsSpinner = new ConsoleSpinner(SteeleTerm.ConsoleLock, prompt, 100, 150);
 					dnsSpinner.Start($"Resolving {hostAddress}");
 					try { hostIP = Dns.GetHostAddresses(hostAddress); }
 					catch
@@ -79,7 +79,7 @@ namespace SteeleTerm.SSH
 					var ip = hostIP[i++];
 					if (Console.CursorLeft != 0) Console.WriteLine("");
 					var checkTop = Console.CursorTop;
-					var tcpSpinner = new ConsoleSpinner(SteeleTerm.consoleLock, prompt, 100, 150);
+					var tcpSpinner = new ConsoleSpinner(SteeleTerm.ConsoleLock, prompt, 100, 150);
 					tcpSpinner.Start($"Checking {ip}:{portNum}");
 					var tcpOk = false;
 					var sshOk = false;
