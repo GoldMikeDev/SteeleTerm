@@ -16,10 +16,10 @@ namespace SteeleTerm
 		{
 			Console.InputEncoding = Encoding.UTF8;
 			Console.OutputEncoding = Encoding.UTF8;
-			bool hasFileBrowser = args.Contains("--fileBrowser", StringComparer.Ordinal);
-			bool hasHelp = args.Contains("--help", StringComparer.Ordinal);
-			bool hasSerial = args.Contains("--serial", StringComparer.Ordinal);
-			bool hasSSH = args.Contains("--ssh", StringComparer.Ordinal);
+			var hasFileBrowser = args.Contains("--fileBrowser", StringComparer.Ordinal);
+			var hasHelp = args.Contains("--help", StringComparer.Ordinal);
+			var hasSerial = args.Contains("--serial", StringComparer.Ordinal);
+			var hasSSH = args.Contains("--ssh", StringComparer.Ordinal);
 			if (args.Length == 0 || !args.Any(arg => availableCommands.Contains(arg))) { Console.WriteLine("Use --help for arg list."); return 1; }
 			if (hasHelp)
 			{
@@ -32,7 +32,7 @@ namespace SteeleTerm
 				Console.WriteLine("  \'--ssh\'                               Open SteeleTerm in ssh mode.");
 				Console.WriteLine("  \'--update [secondary] [tertiary]\'     Increment patch version.");
 				Console.WriteLine("  \'--updateMajor [secondary] [tertiary]\'Increment major version.");
-				Console.WriteLine("  \'--updateMinor [secondary] [teriary]\' Increment minor version.");
+				Console.WriteLine("  \'--updateMinor [secondary] [tertiary]\' Increment minor version.");
 				Console.WriteLine("Secondary args:");
 				Console.WriteLine("  \'<primary> --forceUpdate [tertiary]\'  Force rebuild/reinstall even if nothing changed. Requires an update primary arg.");
 				Console.WriteLine("Tertiary args:");
@@ -44,8 +44,8 @@ namespace SteeleTerm
 			if ((hasHelp && hasSerial) || (hasHelp && hasSSH) || (hasSerial && hasSSH) || (hasHelp && hasFileBrowser) || (hasSerial && hasFileBrowser) || (hasSSH && hasFileBrowser)) { Console.WriteLine("Only one primary argument allowed."); return 1; }
 			if (hasFileBrowser) { SteeleTermFileBrowser.FileBrowser(Directory.GetCurrentDirectory(), true); return 0; }
 			if (hasSerial) { SteeleTermSerial.Serial(); return 0; }
-			if (hasSSH) { SteeleTermSSH.SSH(); return 0; }
-			else return 0;
+			if (hasSSH) { SteeleTermSSH.SSH(); }
+			return 0;
 		}
 		public static void Say(string prompt, string message) { Console.WriteLine($"{prompt}{message}"); }
 		public static void ClearLine(int top)
@@ -74,20 +74,20 @@ namespace SteeleTerm
 				startLeft = Console.CursorLeft;
 			}
 			var buf = new StringBuilder();
-			int echoedCount = 0;
-			bool lastEcho = (echoEnabled?.Invoke() ?? echo);
+			var echoedCount = 0;
+			var lastEcho = (echoEnabled?.Invoke() ?? echo);
 			while (true)
 			{
 				var k = Console.ReadKey(true);
-				bool echoNow = (echoEnabled?.Invoke() ?? echo);
+				var echoNow = (echoEnabled?.Invoke() ?? echo);
 				if (lastEcho && !echoNow && echoedCount != 0)
 				{
 					lock (consoleLock)
 					{
-						for (int i = 0; i < echoedCount; i++)
+						for (var i = 0; i < echoedCount; i++)
 						{
-							int top = Console.CursorTop;
-							int left = Console.CursorLeft;
+							var top = Console.CursorTop;
+							var left = Console.CursorLeft;
 							if (top < startTop || (top == startTop && left <= startLeft)) break;
 							Console.Write("\b \b");
 						}
@@ -96,32 +96,37 @@ namespace SteeleTerm
 				}
 				lastEcho = echoNow;
 				if (buf.Length == 0 && immediateKey != null && immediateKey(k)) { onImmediateKey?.Invoke(k); continue; }
-				if (k.Key == ConsoleKey.Enter)
+				switch (k.Key)
 				{
-					if (commitNewlineOnEnter) { lock (consoleLock) { Console.WriteLine(""); } }
-					if (buf.Length == 0) return null;
-					return buf.ToString();
-				}
-				if (k.Key == ConsoleKey.Backspace)
-				{
-					if (buf.Length == 0) continue;
-					buf.Length--;
-					if (echoNow && echoedCount != 0)
+					case ConsoleKey.Enter:
 					{
-						lock (consoleLock)
-						{
-							int top = Console.CursorTop;
-							int left = Console.CursorLeft;
-							if (top > startTop || (top == startTop && left > startLeft)) Console.Write("\b \b");
-						}
-						echoedCount--;
+						if (!commitNewlineOnEnter) return buf.Length == 0 ? null : buf.ToString();
+						lock (consoleLock) { Console.WriteLine(""); }
+						return buf.Length == 0 ? null : buf.ToString();
 					}
-					continue;
+					case ConsoleKey.Backspace when buf.Length == 0:
+						continue;
+					case ConsoleKey.Backspace:
+					{
+						buf.Length--;
+						if (echoNow && echoedCount != 0)
+						{
+							lock (consoleLock)
+							{
+								var top = Console.CursorTop;
+								var left = Console.CursorLeft;
+								if (top > startTop || (top == startTop && left > startLeft)) Console.Write("\b \b");
+							}
+							echoedCount--;
+						}
+						continue;
+					}
 				}
 				if (k.KeyChar == '\0') continue;
 				if (char.IsControl(k.KeyChar)) continue;
 				buf.Append(k.KeyChar);
-				if (echoNow) { lock (consoleLock) { Console.Write(k.KeyChar); } echoedCount++; }
+				if (!echoNow) continue;
+				lock (consoleLock) { Console.Write(k.KeyChar); } echoedCount++;
 			}
 		}
 	}
