@@ -2,10 +2,6 @@
 {
 	public sealed class ConsoleSpinner(Lock outputLock, string prefix, int intervalMs = 100, int minSpinnerMs = 0) : IDisposable
 	{
-		readonly Lock outputLock = outputLock;
-		readonly string prefix = prefix;
-		readonly int intervalMs = intervalMs;
-		readonly int minSpinnerMs = minSpinnerMs;
 		readonly Queue<(string Line, bool IsErr)> pending = new();
 		readonly Lock pendingLock = new();
 		Thread? spinnerThread;
@@ -17,36 +13,35 @@
 		bool cursorOldVisible;
 		bool cursorCaptured;
 		public bool Active => Volatile.Read(ref active) != 0;
-		public void Start(string text)
+		public void Start(string textInput)
 		{
 			if (Console.IsOutputRedirected) return;
 			if (Interlocked.Exchange(ref active, 1) != 0) return;
-			this.text = text;
+			text = textInput;
 			spinnerStartedAt = Environment.TickCount64;
 			try { cursorOldVisible = !OperatingSystem.IsWindows() || Console.CursorVisible; Console.CursorVisible = false; cursorCaptured = true; } catch { cursorCaptured = false; }
 			spinning = true;
 			spinnerThread = new Thread(() => {
 				char[] frames = ['|', '/', '-', '\\'];
-				int i = 0;
+				var i = 0;
 				while (spinning)
 				{
-					lock (outputLock) { try { Console.Write("\r" + prefix + this.text + " " + frames[i++ & 3] + " "); } catch { } }
+					lock (outputLock) { try { Console.Write("\r" + prefix + text + " " + frames[i++ & 3] + " "); } catch { } }
 					Thread.Sleep(intervalMs);
 				}
-			})
-			{ IsBackground = true };
-			lock (outputLock) { try { Console.Write("\r" + prefix + this.text + " | "); } catch { } }
+			}) { IsBackground = true };
+			lock (outputLock) { try { Console.Write("\r" + prefix + text + " | "); } catch { } }
 			spinnerThread.Start();
 		}
 		public void Enqueue(string line, bool isErr) { lock (pendingLock) pending.Enqueue((line, isErr)); }
 		public void RequestStopAndFlush()
 		{
 			if (!Active) return;
-			long elapsed = Environment.TickCount64 - spinnerStartedAt;
+			var elapsed = Environment.TickCount64 - spinnerStartedAt;
 			if (elapsed >= minSpinnerMs) { StopAndFlush(); return; }
 			if (Interlocked.Exchange(ref stopScheduled, 1) != 0) return;
 			Task.Run(() => {
-				int wait = (int)Math.Max(0, minSpinnerMs - (Environment.TickCount64 - spinnerStartedAt));
+				var wait = (int)Math.Max(0, minSpinnerMs - (Environment.TickCount64 - spinnerStartedAt));
 				if (wait > 0) Thread.Sleep(wait);
 				Interlocked.Exchange(ref stopScheduled, 0);
 				StopAndFlush();

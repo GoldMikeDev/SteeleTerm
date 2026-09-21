@@ -27,9 +27,9 @@ namespace SteeleTerm.Serial
 			if (selected == null) { SteeleTerm.ClearLine(portTop); goto SelectPort; }
 			selected = selected.Trim();
 			if (selected.Length == 0) { SteeleTerm.ClearLine(portTop); goto SelectPort; }
-			if (string.Equals(selected, "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
+			if (string.Equals(selected, "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
 			if (!validPortNumbers.Contains(selected)) { SteeleTerm.ClearLine(portTop); goto SelectPort; }
-			Console.WriteLine("");
+			Console.WriteLine();
 			var portNum = int.Parse(selected);
 			var selectedPort = ports.First(p => GetPortNumber(p.Port) == portNum);
 			SetPromptCOM(selectedPort.Port);
@@ -37,9 +37,9 @@ namespace SteeleTerm.Serial
 		var baudTop = Console.CursorTop;
 			var baud = SteeleTerm.ReadToken(prompt, "Enter baud rate (Default 115200): ");
 			int baudRate;
-			if (string.Equals(baud, "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
-			if (baud == null || baud.Trim().Length == 0) { Console.WriteLine(""); baudRate = DefaultBaud; }
-			else { try { baudRate = int.Parse(baud.Trim()); Console.WriteLine(""); } catch { SteeleTerm.ClearLine(baudTop); goto EnterBaud; } }
+			if (string.Equals(baud, "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
+			if (baud == null || baud.Trim().Length == 0) { Console.WriteLine(); baudRate = DefaultBaud; }
+			else { try { baudRate = int.Parse(baud.Trim()); Console.WriteLine(); } catch { SteeleTerm.ClearLine(baudTop); goto EnterBaud; } }
 			SetPromptBaud(selectedPort.Port, baudRate);
 		EnterBitNotation:
 		var bitsTop = Console.CursorTop;
@@ -47,8 +47,8 @@ namespace SteeleTerm.Serial
 			var dataBits = DefaultDataBits;
 			var parity = DefaultParity;
 			var stopBits = DefaultStopBits;
-			if (string.Equals(bitNotation, "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
-			if (bitNotation == null || bitNotation.Trim().Length == 0) { Console.WriteLine(""); SetPromptBits(selectedPort.Port, baudRate, DefaultDataBits, DefaultParity, DefaultStopBits); }
+			if (string.Equals(bitNotation, "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
+			if (bitNotation == null || bitNotation.Trim().Length == 0) { Console.WriteLine(); SetPromptBits(selectedPort.Port, baudRate, DefaultDataBits, DefaultParity, DefaultStopBits); }
 			else
 			{
 				if (bitNotation.Trim().Length < 3 || bitNotation.Trim().Length > 5) { SteeleTerm.ClearLine(bitsTop); goto EnterBitNotation; }
@@ -73,19 +73,19 @@ namespace SteeleTerm.Serial
 					case "2": stopBits = StopBits.Two; break;
 					default: SteeleTerm.ClearLine(bitsTop); goto EnterBitNotation;
 				}
-				Console.WriteLine("");
+				Console.WriteLine();
 				SetPromptBits(selectedPort.Port, baudRate, dataBits, parity, stopBits);
 			} 
 			Connect:
 		var connectTop = Console.CursorTop;
 			var connect = SteeleTerm.ReadToken(prompt, "Are these settings correct? (Y/N): ");
 			if (connect == null) { SteeleTerm.ClearLine(connectTop); goto Connect; }
-			if (string.Equals(connect.Trim(), "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
+			if (string.Equals(connect.Trim(), "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
 			connect = connect.Trim().ToUpperInvariant();
-			if (connect == "N") { Console.WriteLine(""); goto Reset; }
+			if (connect == "N") { Console.WriteLine(); goto Reset; }
 			if (connect == "Y")
 			{
-				Console.WriteLine("");
+				Console.WriteLine();
 				try
 				{
 					using var serialPort = new SerialPort(selectedPort.Port, baudRate, parity, dataBits, stopBits);
@@ -93,7 +93,7 @@ namespace SteeleTerm.Serial
 					serialPort.ReadTimeout = 250;
 					serialPort.WriteTimeout = 250;
 					serialPort.Open();
-					Console.WriteLine("");
+					Console.WriteLine();
 					SteeleTerm.Say(prompt, $"✅ Connection to {selectedPort.Port} opened.");
 					var stop = false;
 					var forceLineStart = 0;
@@ -136,7 +136,7 @@ namespace SteeleTerm.Serial
 													else
 													{
 														rxSpinner.RequestStopAndFlush();
-														if (Console.CursorLeft != 0) Console.WriteLine("");
+														if (Console.CursorLeft != 0) Console.WriteLine();
 														Console.Write(prompt);
 														rxMinTop = Console.CursorTop;
 														rxMinLeft = Console.CursorLeft;
@@ -169,7 +169,7 @@ namespace SteeleTerm.Serial
 													}
 													if (!seek)
 													{
-														if (Console.CursorLeft != 0) Console.WriteLine("");
+														if (Console.CursorLeft != 0) Console.WriteLine();
 														Console.Write(prompt);
 														rxMinTop = Console.CursorTop;
 														rxMinLeft = Console.CursorLeft;
@@ -228,7 +228,7 @@ namespace SteeleTerm.Serial
 											if (!suppressing)
 											{
 												rxSpinner.RequestStopAndFlush();
-												if (Console.CursorLeft != 0) Console.WriteLine("");
+												if (Console.CursorLeft != 0) Console.WriteLine();
 												Console.Write(prompt);
 												rxMinTop = Console.CursorTop;
 												rxMinLeft = Console.CursorLeft;
@@ -243,7 +243,7 @@ namespace SteeleTerm.Serial
 												else
 												{
 													rxSpinner.RequestStopAndFlush();
-													if (Console.CursorLeft != 0) Console.WriteLine("");
+													if (Console.CursorLeft != 0) Console.WriteLine();
 													Console.Write(prompt);
 													rxMinTop = Console.CursorTop;
 													rxMinLeft = Console.CursorLeft;
@@ -260,7 +260,7 @@ namespace SteeleTerm.Serial
 												continue;
 											}
 											rxSpinner.RequestStopAndFlush();
-											if (Console.CursorLeft != 0) Console.WriteLine("");
+											if (Console.CursorLeft != 0) Console.WriteLine();
 											Console.Write(prompt);
 											rxMinTop = Console.CursorTop;
 											rxMinLeft = Console.CursorLeft;
@@ -269,7 +269,7 @@ namespace SteeleTerm.Serial
 											suppressing = false;
 											continue;
 										}
-										if (c == '\n') { Console.WriteLine(""); atLineStart = true; continue; }
+										if (c == '\n') { Console.WriteLine(); atLineStart = true; continue; }
 										Console.Write(c);
 									}
 								}
@@ -296,7 +296,7 @@ namespace SteeleTerm.Serial
 									break;
 							}
 						}, echoEnabled);
-						lock (SteeleTerm.ConsoleLock) { Console.WriteLine(""); Interlocked.Exchange(ref forceLineStart, 1); }
+						lock (SteeleTerm.ConsoleLock) { Console.WriteLine(); Interlocked.Exchange(ref forceLineStart, 1); }
 						if (line == null) { Volatile.Write(ref secretMode, 0); serialPort.Write("\r"); continue; }
 						Volatile.Write(ref secretMode, 0);
 						if (string.Equals(line.Trim(), "Exit", StringComparison.Ordinal))
@@ -321,11 +321,11 @@ namespace SteeleTerm.Serial
 			else goto Connect;
 			return 0;
 		}
-		private static void SetPromptDisconnected() { prompt = " 🔌 > "; }
-		private static void SetPromptCOM(string port) { prompt = $" 🔌 {port} > "; }
-		private static void SetPromptBaud(string port, int baud) { prompt = $" 🔌 {port} {baud} > "; }
-		private static void SetPromptBits(string port, int baud, int dataBits, Parity parity, StopBits stopBits) { prompt = $" 🔌 {port} {baud} {dataBits}{GetParityChar(parity)}{GetStopBitsText(stopBits)} > "; }
-		private static string GetStopBitsText(StopBits stopBits)
+		 static void SetPromptDisconnected() { prompt = " 🔌 > "; }
+		 static void SetPromptCOM(string port) { prompt = $" 🔌 {port} > "; }
+		 static void SetPromptBaud(string port, int baud) { prompt = $" 🔌 {port} {baud} > "; }
+		 static void SetPromptBits(string port, int baud, int dataBits, Parity parity, StopBits stopBits) { prompt = $" 🔌 {port} {baud} {dataBits}{GetParityChar(parity)}{GetStopBitsText(stopBits)} > "; }
+		 static string GetStopBitsText(StopBits stopBits)
 		{
 			return stopBits switch
 			{
@@ -335,7 +335,7 @@ namespace SteeleTerm.Serial
 				_ => "1"
 			};
 		}
-		private static char GetParityChar(Parity parity)
+		 static char GetParityChar(Parity parity)
 		{
 			return parity switch
 			{
@@ -347,7 +347,7 @@ namespace SteeleTerm.Serial
 				_ => 'N'
 			};
 		}
-		private static List<PortInfo> GetPorts()
+		 static List<PortInfo> GetPorts()
 		{
 			var basePorts = new HashSet<string>(SerialPort.GetPortNames(), StringComparer.OrdinalIgnoreCase);
 			var list = new List<PortInfo>();
@@ -360,26 +360,26 @@ namespace SteeleTerm.Serial
 			if (list.Count == 0) { list.AddRange(basePorts.OrderBy(x => x, StringComparer.OrdinalIgnoreCase).Select(p => new PortInfo(p.ToUpperInvariant(), p.ToUpperInvariant(), "", ""))); }
 			return [.. list.OrderBy(x => x.Port, StringComparer.OrdinalIgnoreCase)];
 		}
-		private static string TryExtractVidPid(string pnpDeviceId)
+		 static string TryExtractVidPid(string pnpDeviceId)
 		{
 			if (string.IsNullOrWhiteSpace(pnpDeviceId)) return "";
 			var m = VIDPID().Match(pnpDeviceId);
 			return !m.Success ? "" : $"{m.Groups[1].Value.ToUpperInvariant()}:{m.Groups[2].Value.ToUpperInvariant()}";
 		}
-		private static void PrintTable(List<PortInfo> ports)
+		 static void PrintTable(List<PortInfo> ports)
 		{
 			var numW = Math.Max(5, ports.Max(p => GetPortNumber(p.Port).ToString().Length));
 			var portW = Math.Max(4, ports.Max(p => p.Port.Length));
 			var nameW = Math.Max(12, ports.Max(p => p.FriendlyName.Length));
 			var vidW = Math.Max(7, ports.Max(p => p.VidPid.Length));
 			static string H(string s, int w) => s.PadRight(w);
-			Console.WriteLine("");
+			Console.WriteLine();
 			Console.WriteLine($"      {H("Port", portW)}  {H("Friendly Name", nameW)}  {H("VID : PID", vidW)}");
 			Console.WriteLine($"      {new string('-', portW)}  {new string('-', nameW)}  {new string('-', vidW)}");
 			foreach (var p in from p in ports let n = GetPortNumber(p.Port).ToString() select p) { Console.WriteLine($"      {H(p.Port, portW)}  {H(p.FriendlyName, nameW)}  {H(p.VidPid, vidW)}"); }
-			Console.WriteLine("");
+			Console.WriteLine();
 		}
-		private static int GetPortNumber(string port)
+		 static int GetPortNumber(string port)
 		{
 			if (string.IsNullOrWhiteSpace(port)) return 0;
 			var i = 0;

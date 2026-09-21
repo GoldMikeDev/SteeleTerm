@@ -101,7 +101,7 @@ namespace SteeleTerm
 					case ConsoleKey.Enter:
 					{
 						if (!commitNewlineOnEnter) return buf.Length == 0 ? null : buf.ToString();
-						lock (ConsoleLock) { Console.WriteLine(""); }
+						lock (ConsoleLock) { Console.WriteLine(); }
 						return buf.Length == 0 ? null : buf.ToString();
 					}
 					case ConsoleKey.Backspace when buf.Length == 0:

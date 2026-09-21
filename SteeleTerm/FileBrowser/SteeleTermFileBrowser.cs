@@ -38,7 +38,7 @@ namespace SteeleTerm.FileBrowser
 					if (!redirected)
 					{
 						scanSpinner = new ConsoleSpinner(ConsoleLock, promptFileBrowser, 100, 150);
-						if (Console.CursorLeft != 0) Console.WriteLine("");
+						if (Console.CursorLeft != 0) Console.WriteLine();
 						scanSpinner.Start("Scanning drives ");
 					}
 					else Console.WriteLine($"{promptFileBrowser}Scanning drives...");
@@ -188,7 +188,7 @@ namespace SteeleTerm.FileBrowser
 				ConsoleSpinner? renderSpinner = null;
 				if (!redirectedRender)
 				{
-					if (Console.CursorLeft != 0) Console.WriteLine("");
+					if (Console.CursorLeft != 0) Console.WriteLine();
 					renderTop = Console.CursorTop;
 					renderSpinner = new ConsoleSpinner(ConsoleLock, promptFileBrowser, 100, 150);
 					renderSpinner.Start(inThisPc ? "Building drive list " : "Building table ");

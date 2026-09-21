@@ -20,30 +20,30 @@ namespace SteeleTerm.SSH
 			if (hostAddress == null) { SteeleTerm.ClearLine(hostTop); goto EnterHost; }
 			hostAddress = hostAddress.Trim();
 			if (hostAddress.Length == 0) { SteeleTerm.ClearLine(hostTop); goto EnterHost; }
-			if (string.Equals(hostAddress, "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
+			if (string.Equals(hostAddress, "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
 			SetPromptHost(hostAddress);
-			Console.WriteLine("");
+			Console.WriteLine();
 		EnterPort:
 		var portTop = Console.CursorTop;
 		var portNum = 22;
 			var port = SteeleTerm.ReadToken(prompt, "Enter port (Default 22): ");
-			if (string.Equals(port, "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
-			if (port == null || port.Trim().Length == 0) { Console.WriteLine(""); portNum = 22; }
+			if (string.Equals(port, "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
+			if (port == null || port.Trim().Length == 0) { Console.WriteLine(); portNum = 22; }
 			else
 			{
 				try { portNum = int.Parse(port.Trim()); }
 				catch { SteeleTerm.ClearLine(portTop); goto EnterPort; }
 				if (portNum is < 1 or > 65535) { SteeleTerm.ClearLine(portTop); goto EnterPort; }
-				Console.WriteLine("");
+				Console.WriteLine();
 			}
 			SetPromptPort(hostAddress, portNum);
 		Connect:
 		var connectTop = Console.CursorTop;
 			var connect = SteeleTerm.ReadToken(prompt, "Are these settings correct? (Y/N): ");
 			if (connect == null) { SteeleTerm.ClearLine(connectTop); goto Connect; }
-			if (string.Equals(connect.Trim(), "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
+			if (string.Equals(connect.Trim(), "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
 			connect = connect.Trim().ToUpperInvariant();
-			if (connect == "N") { Console.WriteLine(""); goto Reset; }
+			if (connect == "N") { Console.WriteLine(); goto Reset; }
 			if (connect == "Y")
 			{
 				Console.WriteLine();
@@ -77,7 +77,7 @@ namespace SteeleTerm.SSH
 				while (i < hostIP.Length)
 				{
 					var ip = hostIP[i++];
-					if (Console.CursorLeft != 0) Console.WriteLine("");
+					if (Console.CursorLeft != 0) Console.WriteLine();
 					var checkTop = Console.CursorTop;
 					var tcpSpinner = new ConsoleSpinner(SteeleTerm.ConsoleLock, prompt, 100, 150);
 					tcpSpinner.Start($"Checking {ip}:{portNum}");
@@ -177,9 +177,9 @@ namespace SteeleTerm.SSH
 				if (userID == null) { SteeleTerm.ClearLine(userTop); goto EnterUser; }
 				userID = userID.Trim();
 				if (userID.Length == 0) { SteeleTerm.ClearLine(userTop); goto EnterUser; }
-				if (string.Equals(userID, "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
+				if (string.Equals(userID, "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
 				SetPromptUser(hostAddress, portNum, userID);
-				Console.WriteLine("");
+				Console.WriteLine();
 			AuthMethod:
 			var authTop = Console.CursorTop;
 				Console.WriteLine();
@@ -229,7 +229,7 @@ namespace SteeleTerm.SSH
 					var passTop = Console.CursorTop;
 						password = SteeleTerm.ReadToken(prompt, "Enter password: ", false, true, true);
 						if (string.IsNullOrEmpty(password)) { SteeleTerm.ClearLine(passTop); goto EnterPassword; }
-						if (string.Equals(password, "Exit", StringComparison.Ordinal)) { Console.WriteLine(""); return 0; }
+						if (string.Equals(password, "Exit", StringComparison.Ordinal)) { Console.WriteLine(); return 0; }
 						break;
 					case AuthMethod.PrivateKey:
 					EnterKeyPath:
